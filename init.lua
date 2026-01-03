@@ -742,6 +742,21 @@ require('lazy').setup({
           end,
         },
       }
+      -- GODOT CONFIG
+      local gdscript_config = {
+        capabilities = capabilities,
+        settings = {},
+      }
+      if vim.fn.has 'win32' == 1 then
+        -- Windows specific. Requires nmap installed (`winget install nmap`)
+        gdscript_config['cmd'] = { 'ncat', 'localhost', os.getenv 'GDScript_Port' or '6005' }
+      end
+      if vim.lsp.config then
+        vim.lsp.config('gdscript', gdscript_config)
+        vim.lsp.enable 'gdscript'
+      else
+        require('lspconfig').gdscript.setup(gdscript_config)
+      end
     end,
   },
 
